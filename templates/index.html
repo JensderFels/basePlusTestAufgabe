@@ -1,0 +1,41 @@
+<!-- DOCTYPE definiert, dass es sich hier um eine HTML5-Seite handelt -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- UTF-8 für deutsche Umlaute -->
+    <meta charset="UTF-8">
+    <!-- Für die Darstellung von z.B. mobilen Geräten -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot BasePlusDigital</title>
+</head>
+<body>
+    <h1> BasePlusDigital Chatbot</h1>
+    <!-- form id chat-form, Formular, wo der Benutzer die Nachrichten eingibt -->
+    <form id="chat-form">
+        <input type="text" id="user-input" name="message" placeholder="Schreibe etwas...">
+        <button type="submit">Senden</button>
+    </form>
+<!-- Hier wird die Antwort vom Chatbot angezeigt -->
+<p id="response"></p>
+<script>
+    // Wird ausgeführt wenn das Formular gesendet wird.
+    document.getElementById("chat-form").onsubmit = async function(event){
+
+        // preventDefault() - Verhindert das neu Laden der Seite(Soll den Chatbot flüssiger machen)
+        event.preventDefault();
+        // Hole Text vom Benutzer
+        let userMessage = document.getElementById("user-input").value;
+        // Sendet die Nachricht an die Flask-Route
+        let response = await fetch("/chat", {
+            method: "POST",
+            body: new URLSearchParams({message: userMessage}),
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        });
+        // Hole Antwort vom Server
+        let text = await response.text();
+        // Zeige Antwort im <p> Tag an
+        document.getElementById("response").innerText = text;
+    }
+</script>
+</body>
+</html>
