@@ -4,6 +4,8 @@
 from flask import Flask, render_template, request
 # PyMuPDF für die PDF-Verarbeitung
 import fitz
+# Modul für Datum und Uhrzeit
+import datetime
 
 # Erstelle Flask-App, __name__ benutzt, damit die richtige Datei als Hauptprogramm erkannt wird.
 app = Flask(__name__)
@@ -18,10 +20,20 @@ def home():
 @app.route('/chat', methods=["POST"])
 def chat():
     # request.form holt den Text aus dem Formular
-    user_input = request.form["message"]
-    # Mache es hier simpel und gebe das gefragte wieder aus, hier könnte man z.B. ein Dictionary verwenden und anhand KEY Wörter antworten.
-    response = f"Gesagt wurde: {user_input}"
+    # Für die Verarbeitung konvertiere ich den Text in Kleinbuchstaben
+    user_input = request.form["message"].lower()
+    # Vielleicht auch hier mit einem Dictionary arbeiten um noch mehr Wörter abzufangen aber erstmal bei den beiden Wörtern belassen
+    if "uhrzeit" in user_input or "wie spät" in user_input:
+        response = get_current_time()
+    else:
+        response = f"Gesagt wurde: {user_input}"
     return response
+
+def get_current_time():
+    # Holt das aktuelle Datum und die Uhrzeit
+    now = datetime.datetime.now()
+    # konvertiere now und gebe nur die Uhrzeit aus.
+    return f"Die aktuelle Uhrzeit ist: {now.strftime('%H:%M:%S')}"
 
 # Neue Route /upload
 @app.route("/upload", methods=["POST"])
