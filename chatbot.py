@@ -2,6 +2,8 @@
 # render_template damit wir HTML Dateien anzeigen können
 # request - holen wir uns Daten z.B. bei Eingabe eines Textes vom Benutzer
 from flask import Flask, render_template, request
+# PyMuPDF für die PDF-Verarbeitung
+import fitz
 
 # Erstelle Flask-App, __name__ benutzt, damit die richtige Datei als Hauptprogramm erkannt wird.
 app = Flask(__name__)
@@ -21,7 +23,28 @@ def chat():
     response = f"Gesagt wurde: {user_input}"
     return response
 
+# Neue Route /upload
+@app.route("/upload", methods=["POST"])
+def upload_pdf():
+    if "pdf" not in request.files:
+        return "Keine Datei hochgeladen!", 400
+
+    pdf_file = request.files["pdf"]
+
+    if pdf_file.filename == "":
+        return "Ungültige Datei!", 400
+
+    text = extract_text_from_pdf(pdf_file)
+    return text if text else "Fehler beim Verarbeiten der Datei!"
+
+# Liest Text von der PDF
+def extract_text_from_pdf(pdf_file):
+    text = ""
+    with fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
+        for page in doc:
+            text += page.get_text()
+    return text
+
 # Main-Methode
 if __name__ == "__main__":
     app.run(debug=True)
-

@@ -9,7 +9,7 @@
     <title>Chatbot BasePlusDigital</title>
 </head>
 <body>
-    <h1> BasePlusDigital Chatbot</h1>
+    <h1>BasePlusDigital Chatbot</h1>
     <!-- form id chat-form, Formular, wo der Benutzer die Nachrichten eingibt -->
     <form id="chat-form">
         <input type="text" id="user-input" name="message" placeholder="Schreibe etwas...">
@@ -17,6 +17,16 @@
     </form>
 <!-- Hier wird die Antwort vom Chatbot angezeigt -->
 <p id="response"></p>
+
+<!-- Datei-Upload -->
+<h2>PDF hochladen</h2>
+    <!-- multipart/form-data, für Datei-Uploads  -->
+<form id="upload-form" enctype="multipart/form-data">
+    <input type="file" id="pdf-file" name="pdf">
+    <button type="submit">Hochladen</button>
+</form>
+    <p id="pdf-response"></p>
+
 <script>
     // Wird ausgeführt wenn das Formular gesendet wird.
     document.getElementById("chat-form").onsubmit = async function(event){
@@ -35,6 +45,27 @@
         let text = await response.text();
         // Zeige Antwort im <p> Tag an
         document.getElementById("response").innerText = text;
+    }
+
+    // Datei-Upload Funktion
+    document.getElementById("upload-form").onsubmit = async function(event){
+        event.preventDefault();
+        let formData = new FormData();
+        let fileInput = document.getElementById("pdf-file").files[0];
+
+        if(!fileInput){
+            document.getElementById("pdf-response").innerText = "Bitte eine Datei auswählen!";
+            return;
+        }
+
+        formData.append("pdf", fileInput);
+        let response = await fetch("/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        let text = await response.text();
+        document.getElementById("pdf-response").innerText = text;
     }
 </script>
 </body>
