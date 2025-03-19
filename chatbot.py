@@ -6,9 +6,18 @@ from flask import Flask, render_template, request
 import fitz
 # Modul für Datum und Uhrzeit
 import datetime
+# Nutze pyngrok für öffentliche URL
+# from pyngrok import ngrok
 
 # Erstelle Flask-App, __name__ benutzt, damit die richtige Datei als Hauptprogramm erkannt wird.
 app = Flask(__name__)
+
+# ngrok auskommentiert, da man hierfür einen Account sowie AuthToken benötigt, dient nur dazu, dass der Chatbot ins Internet gestellt werden könnte.
+
+# Bewusst hier damit erst Flask startet
+# public_url = ngrok.connect(5000) #Port 5000 freigeben
+# Gebe die URL in der Console aus damit es leichter ist diese zu kopieren
+# print(f"öffentliche URL: {public_url}")
 
 # @app.route('/') wird aufgerufen sobald die Startseite geöffnet wird
 @app.route('/')
