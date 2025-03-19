@@ -6,3 +6,7 @@ Anforderungen:
   Möglichkeit, dass man eine PDF hochladen kann und diese eingelesen wird, 
   Aktuelle Uhrzeit soll vom Chatbot ausgegeben werden, sobald man ihn danach fragt, 
   Soll übers Internet oder über localhost aufrufbar sein
+
+Abhängigkeiten
+  venv(optional)
+  pip install flask pymupdf
